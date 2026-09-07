@@ -104,6 +104,57 @@ Results are saved to:
 
 Report the mean of each metric across the six test sequences.
 
+
+## Benchmarking Inference Performance
+
+`benchmark_inference.py` measures the runtime speed and compute cost of the MHDPose model using synthetic (randomly generated) inputs - no real dataset is required except the H36M skeleton metadata file for the `h36m` variant.
+
+It reports:
+- **Latency & throughput**: average/std inference time per batch, clips/sec, and FPS
+- **Memory usage**: peak GPU memory allocated
+- **Compute cost**: parameter count, and FLOPs/MACs for the denoiser (combining `thop` profiling with an analytical estimate for the Mamba selective-scan operation)
+
+**Usage:**
+
+### Benchmark the H36M model (default settings (num_proposals=10, sampling_timesteps=5), no TTA)
+
+```bash
+python benchmark_inference.py -d h36m
+```
+
+# Benchmark the 3DHP model
+
+```bash
+python benchmark_inference.py -d 3dhp
+```
+
+
+## Viewing MPI-INF-3DHP Dataset Frames
+
+`view_3dhp_dataset_frame.py` is a standalone visualization utility for inspecting a single frame from the MPI-INF-3DHP test set, alongside its ground-truth 3D pose (if available).
+
+It loads the sequence's `annot_data.mat` file, locates the corresponding image, and plots the 2D image next to a 3D skeleton plot of the ground-truth pose.
+
+**Usage:**
+
+```bash
+# View frame img_000012.jpg from sequence TS5, with its 3D GT pose
+python view_3dhp_dataset_frame.py --dataset-root /path/to/mpi_inf_3dhp_test_set -sq TS5 -fr 12
+
+# View only the raw image (no pose overlay)
+python view_3dhp_dataset_frame.py --dataset-root /path/to/mpi_inf_3dhp_test_set -sq TS5 -fr 12 --no-pose
+
+# Index by "valid" frame number instead of raw image number
+python view_3dhp_dataset_frame.py --dataset-root /path/to/mpi_inf_3dhp_test_set -sq TS6 -fr 5 --frame-mode valid
+
+# Save the figure to a PNG instead of just displaying it
+python view_3dhp_dataset_frame.py --dataset-root /path/to/mpi_inf_3dhp_test_set -sq TS5 -fr 12 --output frame_TS5_12.png
+
+--dataset-root should point to the folder containing the TS1...TS6 sequence subfolders of the MPI-INF-3DHP test set.
+```
+
+
+
 ## Citation
 
 If you find this repository useful, please consider citing our work:
