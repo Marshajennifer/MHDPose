@@ -122,7 +122,7 @@ It reports:
 python benchmark_inference.py -d h36m
 ```
 
-# Benchmark the 3DHP model
+### Benchmark the 3DHP model
 
 ```bash
 python benchmark_inference.py -d 3dhp
